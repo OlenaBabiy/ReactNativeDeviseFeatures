@@ -1,14 +1,17 @@
+import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import {
   launchCameraAsync,
   useCameraPermissions,
   PermissionStatus,
 } from "expo-image-picker";
 import { useState } from "react";
-import { View, StyleSheet, Button, Alert, Image, Text } from "react-native";
+
 import { Colors } from "../../constants/colors";
+import OutlinedButton from "../UI/OutlinedButton";
 
 function ImagePicker() {
   const [pickedImage, setPickedImage] = useState();
+
   const [cameraPermissionInformation, requestPermission] =
     useCameraPermissions();
 
@@ -26,27 +29,9 @@ function ImagePicker() {
       );
       return false;
     }
+
     return true;
   }
-
-  // async function verifyPermissions() {
-  //   if (
-  //     cameraPermissionInformation.status === PermissionStatus.UNDETERMINED ||
-  //     cameraPermissionInformation.status === PermissionStatus.DENIED
-  //   ) {
-  //     const permissionResponse = await requestPermission();
-
-  //     if (!permissionResponse.granted) {
-  //       Alert.alert(
-  //         "Insufficient Permissions!",
-  //         "You need to grant camera permissions to use this app."
-  //       );
-  //       return false;
-  //     }
-  //   }
-
-  //   return true;
-  // }
 
   async function takeImageHandler() {
     const hasPermission = await verifyPermissions();
@@ -60,18 +45,22 @@ function ImagePicker() {
       aspect: [16, 9],
       quality: 0.5,
     });
+
     setPickedImage(image.uri);
   }
 
-  let imagePreview = <Text>No Image taken yet.</Text>;
+  let imagePreview = <Text>No image taken yet.</Text>;
 
   if (pickedImage) {
-    imagePreview = <Image source={{ uri: pickedImage }} />;
+    imagePreview = <Image style={styles.image} source={{ uri: pickedImage }} />;
   }
+
   return (
-    <View style={styles.image}>
+    <View>
       <View style={styles.imagePreview}>{imagePreview}</View>
-      <Button title="Take Image" onPress={takeImageHandler} />
+      <OutlinedButton icon="camera" onPress={takeImageHandler}>
+        Take Image
+      </OutlinedButton>
     </View>
   );
 }
